@@ -25,7 +25,7 @@ def main():
         .getOrCreate()
 
     # Adjust the log level to Warn
-    # spark.sparkContext.setLogLevel('ERROR')
+    spark.sparkContext.setLogLevel('WARN')
 
     # vehicle Schema
 
@@ -104,8 +104,9 @@ def main():
     def stream_writer(input: DataFrame, checkpointfolder, output):
         return (input.writeStream
                 .format('parquet')
+                .option('checkpointLocation',checkpointfolder)
+                .option('path',output)
                 .outputMode('append')
-                .format("console")
                 .start())
 
     vehicleDF = read_kafka_topic('vehicle_data', vehicleSchema).alias('vehicle')
