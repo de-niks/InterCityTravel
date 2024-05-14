@@ -6,7 +6,7 @@ from config import configuration
 
 
 def main():
-    #os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-10_2.12:3.2.0,org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0,org.apache.hadoop:hadoop-aws:3.4.0,com.amazonaws:aws-java-sdk:1.11.469,org.apache.kafka:kafka-clients:3.2.0'
+
     os.environ['PYSPARK_SUBMIT_ARGS'] = ('--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,'
                                          'org.apache.hadoop:hadoop-aws:3.4.0,com.amazonaws:aws-java-sdk:1.11.469')
     packages = [
@@ -16,7 +16,7 @@ def main():
 
     spark = SparkSession \
         .builder.appName("SmartCityStreaming") \
-        .config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.s3AFileSystem") \
+        .config("spark.hadoop.fs.s3a.impl","org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .config("spark.hadoop.fs.s3a.aws.credentials.provider","org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider")\
         .config("spark.hadoop.fs.s3a.access.key",configuration.get("AWS_ACCESS_KEY")) \
         .config("spark.hadoop.fs.s3a.secret.key", configuration.get("AWS_SECRET_KEY")) \
@@ -115,19 +115,19 @@ def main():
     weatherDF = read_kafka_topic('weather_data', weatherSchema).alias('weather')
     emergencyDF = read_kafka_topic('emergency_data', emergencyInformationSchema).alias('emergency')
 
-    query1 = stream_writer(vehicleDF, "s3a//da-youtube-analytics-useast1/spark-streaming/checkpoints/vehicle_data",
-                           "s3a//da-youtube-analytics-useast1/spark-streaming/data/vehicle_data")
+    query1 = stream_writer(vehicleDF, "s3a://da-youtube-analytics-useast1/spark-streaming/checkpoints/vehicle_data",
+                           "s3a://da-youtube-analytics-useast1/spark-streaming/data/vehicle_data")
 
-    query2 = stream_writer(gpsDF, "s3a//da-youtube-analytics-useast1/spark-streaming/checkpoints/gps_data",
-                           "s3a//da-youtube-analytics-useast1/spark-streaming/data/gps_data")
+    query2 = stream_writer(gpsDF, "s3a://da-youtube-analytics-useast1/spark-streaming/checkpoints/gps_data",
+                           "s3a://da-youtube-analytics-useast1/spark-streaming/data/gps_data")
     query3 = stream_writer(trafficDF, "s3a//da-youtube-analytics-useast1/spark-streaming/checkpoints/traffic_data",
-                           "s3a//da-youtube-analytics-useast1/spark-streaming/data/traffic_data")
+                           "s3a://da-youtube-analytics-useast1/spark-streaming/data/traffic_data")
 
-    query4 = stream_writer(weatherDF, "s3a//da-youtube-analytics-useast1/spark-streaming/checkpoints/weather_data",
-                           "s3a//da-youtube-analytics-useast1/spark-streaming/data/weather_data")
+    query4 = stream_writer(weatherDF, "s3a://da-youtube-analytics-useast1/spark-streaming/checkpoints/weather_data",
+                           "s3a://da-youtube-analytics-useast1/spark-streaming/data/weather_data")
 
-    query5 = stream_writer(emergencyDF, "s3a//da-youtube-analytics-useast1/spark-streaming/checkpoints/emergency_data",
-                           "s3a//da-youtube-analytics-useast1/spark-streaming/data/emergency_data")
+    query5 = stream_writer(emergencyDF, "s3a://da-youtube-analytics-useast1/spark-streaming/checkpoints/emergency_data",
+                           "s3a://da-youtube-analytics-useast1/spark-streaming/data/emergency_data")
 
     query5.awaitTermination()
 
