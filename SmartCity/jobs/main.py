@@ -9,8 +9,8 @@ from confluent_kafka import serializing_producer, Producer, SerializingProducer
 FROM_CITY_COORDINATES = {"latitude": 40.51872, "longitude": -74.4121}  # edison NJ
 TO_CITY_COORDINATES = {"latitude": 39.29038, "longitude": -76.61219}  # Baltimore MD
 
-LATITUDE_INCREMENT = FROM_CITY_COORDINATES['latitude'] - TO_CITY_COORDINATES['latitude'] / 100
-LONGITUDE_INCREMENT = FROM_CITY_COORDINATES['longitude'] - TO_CITY_COORDINATES['longitude'] / 100
+LATITUDE_INCREMENT = (FROM_CITY_COORDINATES['latitude'] - TO_CITY_COORDINATES['latitude']) / 100
+LONGITUDE_INCREMENT = (FROM_CITY_COORDINATES['longitude'] - TO_CITY_COORDINATES['longitude']) / 100
 
 KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVER', 'localhost:9092')
 VEHICLE_TOPIC = os.getenv('VEHICLE_TOPIC', 'vehicle_data')
@@ -32,9 +32,10 @@ def get_next_time():
 
 def simulate_vehicle_movement():
     global start_location
+
     start_location['latitude'] += LATITUDE_INCREMENT
     start_location['longitude'] += LONGITUDE_INCREMENT
-    # add randomness
+
     start_location['latitude'] += random.uniform(-0.0005, 0.0005)
     start_location['longitude'] += random.uniform(-0.0005, 0.0005)
 
