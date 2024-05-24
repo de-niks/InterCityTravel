@@ -6,8 +6,8 @@ import uuid
 from datetime import datetime, timedelta
 from confluent_kafka import serializing_producer, Producer, SerializingProducer
 
-FROM_CITY_COORDINATES = {"latitude": 40.51872, "longitude": -74.4121}  # edison NJ
-TO_CITY_COORDINATES = {"latitude": 39.29038, "longitude": -76.61219}  # Baltimore MD
+FROM_CITY_COORDINATES = {"latitude": 40.51872, "longitude": -74.4121} 
+TO_CITY_COORDINATES = {"latitude": 39.29038, "longitude": -76.61219} 
 
 LATITUDE_INCREMENT = (FROM_CITY_COORDINATES['latitude'] - TO_CITY_COORDINATES['latitude']) / 100
 LONGITUDE_INCREMENT = (FROM_CITY_COORDINATES['longitude'] - TO_CITY_COORDINATES['longitude']) / 100
